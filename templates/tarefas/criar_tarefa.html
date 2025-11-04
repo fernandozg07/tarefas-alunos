@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo_pagina|default:"Criar Tarefa" }}</title>
+    <!-- Incluindo Tailwind CSS para estilos modernos e responsivos (Remova se não estiver usando Tailwind) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilos básicos para o Django Forms */
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .form-group input:not([type="checkbox"]), .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db; /* Cor cinza-claro */
+            border-radius: 0.5rem;
+            box-sizing: border-box;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans">
+    <div class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- Cabeçalho -->
+        <header class="mb-8 flex justify-between items-center border-b pb-4">
+            <h1 class="text-3xl font-extrabold text-indigo-700">
+                Criar Nova Tarefa
+            </h1>
+            <a href="{% url 'tarefas:lista_tarefas' %}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-150 shadow-md">
+                ← Voltar
+            </a>
+        </header>
+
+        <!-- Mensagens do Django -->
+        {% if messages %}
+            <div class="mb-4">
+                {% for message in messages %}
+                    <div class="p-3 mb-2 rounded-lg {% if message.tags == 'error' %}bg-red-100 text-red-800{% elif message.tags == 'success' %}bg-green-100 text-green-800{% else %}bg-blue-100 text-blue-800{% endif %} shadow-sm" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Container do Formulário -->
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl border border-gray-100">
+            <form method="post" action="{% url 'tarefas:criar_tarefa' %}">
+                {% csrf_token %}
+
+                <!-- Campos do Formulário -->
+                {% for field in form %}
+                    <div class="form-group mb-5">
+                        <label for="{{ field.id_for_label }}" class="text-sm text-gray-700">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                        
+                        <!-- Exibir erros específicos do campo -->
+                        {% for error in field.errors %}
+                            <p class="text-red-500 text-xs italic mt-1">{{ error }}</p>
+                        {% endfor %}
+
+                        <!-- Exibir texto de ajuda, se houver -->
+                        {% if field.help_text %}
+                            <p class="text-gray-500 text-xs mt-1">{{ field.help_text }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <!-- Erros não relacionados a campos específicos -->
+                {% if form.non_field_errors %}
+                    <div class="mb-4 p-3 bg-red-100 text-red-800 rounded-lg shadow-sm">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- Botão de Submissão -->
+                <div class="mt-8">
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-200 ease-in-out transform hover:scale-[1.01] shadow-lg shadow-indigo-200">
+                        Publicar Tarefa
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,78 +1,101 @@
 {% extends 'base.html' %}
 
-{% block title %}Bem-vindo | Sistema Acadêmico{% endblock %}
+{% block title %}Sistema Acadêmico | Conectando Professores e Alunos{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gradient-to-br from-indigo-50 to-white">
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
     <!-- Hero Section -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="text-center">
-            <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 mb-6">
-                Sistema de Tarefas
-                <span class="text-indigo-600">Acadêmico</span>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="text-center mb-12">
+            <div class="text-6xl mb-4">🎓</div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+                Sistema Acadêmico
             </h1>
-            <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                Plataforma completa para gerenciamento de tarefas entre professores e alunos. 
-                Interface moderna, upload de arquivos e sistema de avaliação integrado.
+            <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                <span class="text-indigo-600 font-semibold">"Conectando professores e alunos"</span><br>
+                Plataforma inteligente com IA para criar e gerenciar tarefas
             </p>
             
             {% if user.is_authenticated %}
-                <div class="space-x-4">
-                    <a href="{% url 'tarefas:dashboard' %}" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition duration-200 shadow-lg">
-                        Acessar Dashboard
-                    </a>
-                    <a href="{% url 'tarefas:lista_tarefas' %}" class="inline-block bg-gray-600 hover:bg-gray-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition duration-200 shadow-lg">
-                        Ver Tarefas
-                    </a>
+                <div class="bg-white p-8 rounded-2xl shadow-xl border max-w-md mx-auto">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">👋 Olá, {{ user.first_name|default:user.username }}!</h3>
+                    {% if user.is_superuser %}
+                        <div class="text-center mb-4">
+                            <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-semibold">👨‍🏫 Professor</span>
+                        </div>
+                        <a href="{% url 'tarefas:dashboard' %}" class="block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg text-center transition duration-200 shadow-lg mb-3">
+                            📊 Meu Dashboard
+                        </a>
+                        <a href="{% url 'tarefas:criar_tarefa' %}" class="block w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg text-center transition duration-200 shadow-lg">
+                            📝 Nova Tarefa
+                        </a>
+                    {% else %}
+                        <div class="text-center mb-4">
+                            <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">👨‍🎓 Aluno</span>
+                        </div>
+                        <a href="{% url 'tarefas:dashboard' %}" class="block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg text-center transition duration-200 shadow-lg mb-3">
+                            📊 Meu Dashboard
+                        </a>
+                        <a href="{% url 'tarefas:lista_tarefas' %}" class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-center transition duration-200 shadow-lg">
+                            📋 Minhas Tarefas
+                        </a>
+                    {% endif %}
                 </div>
             {% else %}
-                <a href="/auth/login/" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition duration-200 shadow-lg">
-                    Fazer Login
-                </a>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+                    <div class="bg-white p-8 rounded-2xl shadow-xl border text-center hover:shadow-2xl transition duration-300">
+                        <div class="text-4xl mb-4">👨‍🏫</div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Sou Professor</h3>
+                        <p class="text-gray-600 mb-6 text-sm">Crie tarefas, avalie alunos e use IA para gerar questões</p>
+                        <a href="{% url 'tarefas:cadastro_professor' %}" class="block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 shadow-lg mb-2">
+                            🚀 Cadastrar
+                        </a>
+                        <a href="/auth/login/" class="block w-full bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-6 rounded-lg transition duration-200">
+                            Já tenho conta
+                        </a>
+                    </div>
+                    
+                    <div class="bg-white p-8 rounded-2xl shadow-xl border text-center hover:shadow-2xl transition duration-300">
+                        <div class="text-4xl mb-4">👨‍🎓</div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Sou Aluno</h3>
+                        <p class="text-gray-600 mb-6 text-sm">Acesse tarefas, envie arquivos e acompanhe suas notas</p>
+                        <a href="{% url 'tarefas:cadastro_aluno' %}" class="block w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 shadow-lg mb-2">
+                            🚀 Cadastrar
+                        </a>
+                        <a href="/auth/login/" class="block w-full bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-6 rounded-lg transition duration-200">
+                            Já tenho conta
+                        </a>
+                    </div>
+                </div>
             {% endif %}
         </div>
     </div>
 
     <!-- Features Section -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div class="text-center p-6 bg-white rounded-xl shadow-lg">
-                <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                </div>
-                <h3 class="text-lg font-semibold mb-2">Criar Tarefas</h3>
-                <p class="text-gray-600 text-sm">Professores podem criar e gerenciar tarefas com prazos definidos</p>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h2 class="text-2xl font-bold text-center text-gray-800 mb-8">✨ Funcionalidades</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="text-center p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                <div class="text-3xl mb-3">🤖</div>
+                <h3 class="text-lg font-semibold mb-2 text-indigo-600">IA para Questões</h3>
+                <p class="text-gray-600 text-sm">Gere questões automaticamente com inteligência artificial</p>
             </div>
 
-            <div class="text-center p-6 bg-white rounded-xl shadow-lg">
-                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                    </svg>
-                </div>
-                <h3 class="text-lg font-semibold mb-2">Upload de Arquivos</h3>
-                <p class="text-gray-600 text-sm">Alunos podem enviar seus trabalhos de forma segura</p>
+            <div class="text-center p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                <div class="text-3xl mb-3">📊</div>
+                <h3 class="text-lg font-semibold mb-2 text-green-600">Dashboard Inteligente</h3>
+                <p class="text-gray-600 text-sm">Acompanhe progresso e estatísticas em tempo real</p>
             </div>
 
-            <div class="text-center p-6 bg-white rounded-xl shadow-lg">
-                <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
-                    </svg>
-                </div>
-                <h3 class="text-lg font-semibold mb-2">Sistema de Notas</h3>
-                <p class="text-gray-600 text-sm">Avaliação e feedback direto do professor</p>
+            <div class="text-center p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                <div class="text-3xl mb-3">✅</div>
+                <h3 class="text-lg font-semibold mb-2 text-yellow-600">Aprovação Rápida</h3>
+                <p class="text-gray-600 text-sm">Aprove ou rejeite tarefas com apenas 1 clique</p>
             </div>
 
-            <div class="text-center p-6 bg-white rounded-xl shadow-lg">
-                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                    </svg>
-                </div>
-                <h3 class="text-lg font-semibold mb-2">Interface Responsiva</h3>
+            <div class="text-center p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                <div class="text-3xl mb-3">📱</div>
+                <h3 class="text-lg font-semibold mb-2 text-purple-600">Interface Responsiva</h3>
                 <p class="text-gray-600 text-sm">Funciona perfeitamente em desktop, tablet e mobile</p>
             </div>
         </div>
@@ -85,9 +108,14 @@
             <h2 class="text-3xl font-bold text-white mb-4">Pronto para começar?</h2>
             <p class="text-indigo-100 text-lg mb-8">Faça login e comece a usar o sistema agora mesmo</p>
             <div class="space-x-4">
-                <a href="/auth/login/" class="inline-block bg-white text-indigo-600 font-bold py-3 px-6 rounded-lg hover:bg-gray-100 transition duration-200">
-                    Fazer Login
-                </a>
+                <div class="space-x-4">
+                    <a href="/auth/login/" class="inline-block bg-white text-indigo-600 font-bold py-3 px-6 rounded-lg hover:bg-gray-100 transition duration-200">
+                        Fazer Login
+                    </a>
+                    <a href="{% url 'tarefas:cadastro_aluno' %}" class="inline-block bg-green-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-600 transition duration-200">
+                        Cadastrar-se
+                    </a>
+                </div>
             </div>
             <div class="mt-8 text-indigo-100 text-sm">
                 <p><strong>Para testar:</strong></p>

@@ -130,6 +130,9 @@ STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# API OpenRouter para IA
+OPENROUTER_API_KEY = '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'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

@@ -4,6 +4,8 @@ from .views_home import home
 from .views_dashboard import dashboard
 from .views_auth import logout_view
 from .views_avaliacao import aprovar_entrega, rejeitar_entrega
+from .views_cadastro import cadastro_aluno, cadastro_professor
+from .views_ia import gerador_questoes
 
 # Define o namespace do app para uso em templates (ex: {% url 'tarefas:lista_tarefas' %})
 app_name = 'tarefas' 
@@ -29,4 +31,11 @@ urlpatterns = [
     # Avaliação de entregas
     path('entrega/<int:entrega_id>/aprovar/', aprovar_entrega, name='aprovar_entrega'),
     path('entrega/<int:entrega_id>/rejeitar/', rejeitar_entrega, name='rejeitar_entrega'),
+    
+    # Cadastros
+    path('cadastro/aluno/', cadastro_aluno, name='cadastro_aluno'),
+    path('cadastro/professor/', cadastro_professor, name='cadastro_professor'),
+    
+    # IA - Gerador de Questões
+    path('ia/questoes/', gerador_questoes, name='gerador_questoes'),
 ]

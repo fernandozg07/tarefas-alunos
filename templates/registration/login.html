@@ -49,12 +49,26 @@
             </div>
         </form>
         
-        <div class="text-center">
-            <p class="text-sm text-gray-600">
-                <strong>Para testar:</strong><br>
-                Professor: admin / admin123<br>
-                Aluno: aluno1 / senha123
-            </p>
+        <div class="text-center space-y-4">
+            <div class="border-t pt-4">
+                <p class="text-sm text-gray-600 mb-3">Não tem conta ainda?</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <a href="{% url 'tarefas:cadastro_professor' %}" class="block bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-medium py-2 px-4 rounded-lg transition duration-150 text-sm">
+                        👨🏫 Sou Professor
+                    </a>
+                    <a href="{% url 'tarefas:cadastro_aluno' %}" class="block bg-green-50 hover:bg-green-100 text-green-700 font-medium py-2 px-4 rounded-lg transition duration-150 text-sm">
+                        👨🎓 Sou Aluno
+                    </a>
+                </div>
+            </div>
+            
+            <div class="bg-blue-50 p-3 rounded-lg">
+                <p class="text-xs text-blue-700 font-medium mb-1">Para testar o sistema:</p>
+                <p class="text-xs text-blue-600">
+                    Professor: admin / admin123<br>
+                    Aluno: aluno1 / senha123
+                </p>
+            </div>
         </div>
     </div>
 </div>

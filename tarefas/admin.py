@@ -2,6 +2,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import Tarefa, Entrega, DesignacaoAluno
+from .models_redacao import RedacaoTema, RedacaoEntrega, RedacaoCorrecao, RedacaoAnaliseIA
 
 # Configuração da exibição do modelo Tarefa no painel de administração
 @admin.register(Tarefa)
@@ -60,5 +61,53 @@ class DesignacaoAlunoAdmin(admin.ModelAdmin):
     
     def save_model(self, request, obj, form, change):
         if not obj.pk and request.user.is_superuser:
+            obj.professor = request.user
+        super().save_model(request, obj, form, change)
+
+# Configuração do admin para Redações
+@admin.register(RedacaoTema)
+class RedacaoTemaAdmin(admin.ModelAdmin):
+    list_display = ('titulo', 'professor', 'data_publicacao', 'data_expiracao', 'ativo', 'total_entregas')
+    list_filter = ('ativo', 'data_publicacao', 'professor')
+    search_fields = ('titulo', 'enunciado')
+    exclude = ('professor',)
+    
+    def total_entregas(self, obj):
+        return obj.entregas.count()
+    total_entregas.short_description = 'Entregas'
+    
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            obj.professor = request.user
+        super().save_model(request, obj, form, change)
+
+@admin.register(RedacaoEntrega)
+class RedacaoEntregaAdmin(admin.ModelAdmin):
+    list_display = ('tema', 'aluno', 'data_entrega', 'status', 'palavras_count', 'nota_final')
+    list_filter = ('status', 'tema', 'data_entrega')
+    search_fields = ('aluno__username', 'tema__titulo')
+    readonly_fields = ('palavras_count',)
+    
+    def nota_final(self, obj):
+        if hasattr(obj, 'correcao'):
+            return f'{obj.correcao.nota_total}/1000'
+        return 'Não corrigida'
+    nota_final.short_description = 'Nota'
+
+@admin.register(RedacaoCorrecao)
+class RedacaoCorrecaoAdmin(admin.ModelAdmin):
+    list_display = ('entrega', 'nota_total', 'nivel_geral', 'data_correcao', 'corrigida_por_ia')
+    list_filter = ('corrigida_por_ia', 'data_correcao')
+    fieldsets = (
+        ('Competências ENEM', {
+            'fields': (('competencia_1', 'competencia_2'), ('competencia_3', 'competencia_4'), 'competencia_5')
+        }),
+        ('Comentários', {
+            'fields': ('comentario_c1', 'comentario_c2', 'comentario_c3', 'comentario_c4', 'comentario_c5', 'comentario_geral')
+        }),
+    )
+    
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
             obj.professor = request.user
         super().save_model(request, obj, form, change)

@@ -6,6 +6,10 @@ from .views_auth import logout_view
 from .views_avaliacao import aprovar_entrega, rejeitar_entrega
 from .views_cadastro import cadastro_aluno, cadastro_professor
 from .views_ia import gerador_questoes
+from .views_redacao import (lista_redacoes, criar_tema_redacao, gerar_tema_ia, 
+                           escrever_redacao, corrigir_redacao, ver_feedback_redacao, contar_palavras_ajax)
+from .views_redacao import (lista_redacoes, criar_tema_redacao, gerar_tema_ia, 
+                           escrever_redacao, corrigir_redacao, ver_feedback_redacao, contar_palavras_ajax)
 
 # Define o namespace do app para uso em templates (ex: {% url 'tarefas:lista_tarefas' %})
 app_name = 'tarefas' 
@@ -38,4 +42,13 @@ urlpatterns = [
     
     # IA - Gerador de Questões
     path('ia/questoes/', gerador_questoes, name='gerador_questoes'),
+    
+    # Sistema de Redações ENEM
+    path('redacoes/', lista_redacoes, name='lista_redacoes'),
+    path('redacoes/criar/', criar_tema_redacao, name='criar_tema_redacao'),
+    path('redacoes/gerar-tema/', gerar_tema_ia, name='gerar_tema_ia'),
+    path('redacoes/<int:tema_id>/escrever/', escrever_redacao, name='escrever_redacao'),
+    path('redacoes/corrigir/<int:entrega_id>/', corrigir_redacao, name='corrigir_redacao'),
+    path('redacoes/feedback/<int:entrega_id>/', ver_feedback_redacao, name='ver_feedback_redacao'),
+    path('ajax/contar-palavras/', contar_palavras_ajax, name='contar_palavras_ajax'),
 ]

@@ -34,7 +34,7 @@ class EntregaAdmin(admin.ModelAdmin):
     list_display = ('tarefa', 'aluno', 'data_entrega', 'status', 'nota', 'arquivo_link', 'atrasada')
     list_filter = ('tarefa', 'aluno', 'data_entrega', 'status', 'nota')
     fields = ('tarefa', 'aluno', 'arquivo', 'status', 'nota', 'comentarios_professor')
-    search_fields = ('tarefa__titulo', 'aluno__username', 'observacoes_aluno')
+    search_fields = ('tarefa__titulo', 'aluno__username')
     
     # Adiciona um link para o arquivo no admin
     def arquivo_link(self, obj):

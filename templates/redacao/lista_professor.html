@@ -44,11 +44,6 @@
                 <div class="flex justify-between items-center">
                     <div class="text-sm text-gray-600">
                         📊 {{ tema.entregas.count }} entrega{{ tema.entregas.count|pluralize }}
-                        {% with pendentes=tema.entregas.exclude:status='corrigida'|length %}
-                            {% if pendentes > 0 %}
-                                | 🔄 {{ pendentes }} pendente{{ pendentes|pluralize }}
-                            {% endif %}
-                        {% endwith %}
                     </div>
                     <div class="space-x-2">
                         <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm">👁️ Ver Entregas</a>

@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
+import os
 
 class RedacaoTema(models.Model):
     """Tema de redação estilo ENEM"""
@@ -13,6 +14,7 @@ class RedacaoTema(models.Model):
     titulo = models.CharField(max_length=200, verbose_name='Título do Tema')
     enunciado = models.TextField(verbose_name='Enunciado Completo')
     textos_apoio = models.TextField(blank=True, verbose_name='Textos de Apoio')
+    arquivo_tema = models.FileField(upload_to='redacao_temas/', blank=True, null=True, verbose_name='Arquivo do Tema (PDF)')
     
     data_publicacao = models.DateTimeField(default=timezone.now)
     data_expiracao = models.DateTimeField(verbose_name='Prazo de Entrega')
@@ -186,3 +188,22 @@ class RedacaoAnaliseIA(models.Model):
     def nota_total_ia(self):
         return (self.nota_ia_c1 + self.nota_ia_c2 + self.nota_ia_c3 + 
                 self.nota_ia_c4 + self.nota_ia_c5)
+
+class RedacaoComentario(models.Model):
+    """Sistema de comentários entre professor e aluno"""
+    
+    entrega = models.ForeignKey(RedacaoEntrega, on_delete=models.CASCADE, related_name='comentarios')
+    autor = models.ForeignKey(User, on_delete=models.CASCADE)
+    texto = models.TextField(verbose_name='Comentário')
+    data_comentario = models.DateTimeField(default=timezone.now)
+    
+    # Para responder a um comentário específico
+    resposta_para = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='respostas')
+    
+    class Meta:
+        verbose_name = 'Comentário'
+        verbose_name_plural = 'Comentários'
+        ordering = ['data_comentario']
+    
+    def __str__(self):
+        return f'{self.autor.username}: {self.texto[:50]}...'

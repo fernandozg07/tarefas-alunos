@@ -8,8 +8,8 @@ from .views_cadastro import cadastro_aluno, cadastro_professor
 from .views_ia import gerador_questoes
 from .views_redacao import (lista_redacoes, criar_tema_redacao, gerar_tema_ia, 
                            escrever_redacao, corrigir_redacao, ver_feedback_redacao, contar_palavras_ajax)
-from .views_redacao import (lista_redacoes, criar_tema_redacao, gerar_tema_ia, 
-                           escrever_redacao, corrigir_redacao, ver_feedback_redacao, contar_palavras_ajax)
+from .views_redacao_extra import responder_comentario, detalhe_tema
+from .views_entregas import entregas_tema
 
 # Define o namespace do app para uso em templates (ex: {% url 'tarefas:lista_tarefas' %})
 app_name = 'tarefas' 
@@ -50,5 +50,8 @@ urlpatterns = [
     path('redacoes/<int:tema_id>/escrever/', escrever_redacao, name='escrever_redacao'),
     path('redacoes/corrigir/<int:entrega_id>/', corrigir_redacao, name='corrigir_redacao'),
     path('redacoes/feedback/<int:entrega_id>/', ver_feedback_redacao, name='ver_feedback_redacao'),
+    path('redacoes/tema/<int:tema_id>/', detalhe_tema, name='detalhe_tema'),
+    path('redacoes/tema/<int:tema_id>/entregas/', entregas_tema, name='entregas_tema'),
+    path('redacoes/comentario/<int:comentario_id>/responder/', responder_comentario, name='responder_comentario'),
     path('ajax/contar-palavras/', contar_palavras_ajax, name='contar_palavras_ajax'),
 ]

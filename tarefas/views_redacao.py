@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.http import JsonResponse
 from django.utils import timezone
-from .models_redacao import RedacaoTema, RedacaoEntrega, RedacaoCorrecao, RedacaoAnaliseIA
+from .models_redacao import RedacaoTema, RedacaoEntrega, RedacaoCorrecao, RedacaoAnaliseIA, RedacaoComentario
 from .ia_enem import CorretorEnemIA
 
 def is_professor(user):
@@ -37,6 +37,7 @@ def criar_tema_redacao(request):
         data_expiracao = request.POST.get('data_expiracao')
         palavras_min = int(request.POST.get('palavras_min', 200))
         palavras_max = int(request.POST.get('palavras_max', 500))
+        arquivo_tema = request.FILES.get('arquivo_tema')
         
         tema = RedacaoTema.objects.create(
             professor=request.user,
@@ -45,7 +46,8 @@ def criar_tema_redacao(request):
             textos_apoio=textos_apoio,
             data_expiracao=data_expiracao,
             palavras_min=palavras_min,
-            palavras_max=palavras_max
+            palavras_max=palavras_max,
+            arquivo_tema=arquivo_tema
         )
         
         messages.success(request, f'Tema "{titulo}" criado com sucesso!')
@@ -71,6 +73,11 @@ def gerar_tema_ia(request):
 def escrever_redacao(request, tema_id):
     """Aluno escreve redação"""
     tema = get_object_or_404(RedacaoTema, id=tema_id, ativo=True)
+    
+    # Professores não podem escrever redações
+    if request.user.is_superuser:
+        messages.error(request, 'Professores não podem escrever redações!')
+        return redirect('tarefas:detalhe_tema', tema_id=tema.id)
     
     # Verifica se já entregou
     entrega_existente = RedacaoEntrega.objects.filter(tema=tema, aluno=request.user).first()
@@ -190,10 +197,29 @@ def corrigir_redacao(request, entrega_id):
 @login_required
 def ver_feedback_redacao(request, entrega_id):
     """Aluno vê feedback da sua redação"""
-    entrega = get_object_or_404(RedacaoEntrega, id=entrega_id, aluno=request.user)
+    if request.user.is_superuser:
+        # Professor pode ver qualquer entrega dos seus temas
+        entrega = get_object_or_404(RedacaoEntrega, id=entrega_id, tema__professor=request.user)
+    else:
+        # Aluno só pode ver suas próprias entregas
+        entrega = get_object_or_404(RedacaoEntrega, id=entrega_id, aluno=request.user)
+    
+    comentarios = entrega.comentarios.filter(resposta_para=None).order_by('data_comentario')
+    
+    if request.method == 'POST':
+        texto_comentario = request.POST.get('comentario', '').strip()
+        if texto_comentario:
+            RedacaoComentario.objects.create(
+                entrega=entrega,
+                autor=request.user,
+                texto=texto_comentario
+            )
+            messages.success(request, 'Comentário adicionado!')
+            return redirect('tarefas:ver_feedback_redacao', entrega_id=entrega_id)
     
     return render(request, 'redacao/feedback.html', {
-        'entrega': entrega
+        'entrega': entrega,
+        'comentarios': comentarios
     })
 
 @login_required

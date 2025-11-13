@@ -46,7 +46,7 @@
                         📊 {{ tema.entregas.count }} entrega{{ tema.entregas.count|pluralize }}
                     </div>
                     <div class="space-x-2">
-                        <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm">👁️ Ver Entregas</a>
+                        <a href="{% url 'tarefas:entregas_tema' tema.id %}" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm">👁️ Ver Entregas</a>
                     </div>
                 </div>
             </div>

@@ -30,10 +30,11 @@
                         {% if user.is_superuser %}
                             <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs font-semibold">Professor</span>
                             <a href="{% url 'tarefas:dashboard' %}" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm">Dashboard</a>
-                            <a href="{% url 'admin:index' %}" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm">Admin</a>
+                            <a href="{% url 'tarefas:ajuda' %}" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm">Ajuda</a>
                         {% else %}
                             <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">Aluno</span>
                             <a href="{% url 'tarefas:dashboard' %}" class="text-green-600 hover:text-green-800 font-medium text-sm">Dashboard</a>
+                            <a href="{% url 'tarefas:ajuda' %}" class="text-green-600 hover:text-green-800 font-medium text-sm">Ajuda</a>
                         {% endif %}
                         <a href="{% url 'tarefas:logout' %}" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm font-medium transition duration-150">Sair</a>
                     {% else %}

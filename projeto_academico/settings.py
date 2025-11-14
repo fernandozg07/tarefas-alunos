@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-m_e(h1*n!k67+d0v*k7+v1107+g1!*c+c6+e7+n1!^m!h5+^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']  # Permite acesso de qualquer IP na rede
 
 
 # Application definition

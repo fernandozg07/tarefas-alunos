@@ -162,7 +162,14 @@ def corrigir_redacao(request, entrega_id):
         # Criar ou atualizar correção
         correcao, created = RedacaoCorrecao.objects.get_or_create(
             entrega=entrega,
-            defaults={'professor': request.user}
+            defaults={
+                'professor': request.user,
+                'competencia_1': 0,
+                'competencia_2': 0,
+                'competencia_3': 0,
+                'competencia_4': 0,
+                'competencia_5': 0
+            }
         )
         
         # Atualizar notas das competências

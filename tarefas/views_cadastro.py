@@ -10,13 +10,24 @@ def cadastro_aluno(request):
         form = CadastroAlunoForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # Designar automaticamente para o primeiro professor disponível
-            professor = User.objects.filter(is_superuser=True).first()
-            if professor:
+            
+            # Verificar se foi escolhido um professor específico
+            professor_escolhido_id = request.POST.get('professor_escolhido')
+            
+            if professor_escolhido_id and professor_escolhido_id != 'automatico':
+                # Conectar ao professor escolhido
+                professor = User.objects.get(id=professor_escolhido_id, is_superuser=True)
                 DesignacaoAluno.objects.create(professor=professor, aluno=user)
-                messages.success(request, f'Cadastro realizado! Você foi conectado ao Prof. {professor.first_name or professor.username}. Faça login para acessar suas tarefas.')
+                messages.success(request, f'Cadastro realizado! Você foi conectado ao Prof. {professor.first_name or professor.username}.')
             else:
-                messages.success(request, 'Cadastro realizado! Aguarde um professor se cadastrar para receber tarefas.')
+                # Designar automaticamente para o primeiro professor disponível
+                professor = User.objects.filter(is_superuser=True).first()
+                if professor:
+                    DesignacaoAluno.objects.create(professor=professor, aluno=user)
+                    messages.success(request, f'Cadastro realizado! Você foi conectado automaticamente ao Prof. {professor.first_name or professor.username}.')
+                else:
+                    messages.success(request, 'Cadastro realizado! Aguarde um professor se cadastrar para receber tarefas.')
+            
             return redirect('/auth/login/')
     else:
         form = CadastroAlunoForm()
@@ -45,10 +56,10 @@ def cadastro_professor(request):
             user.save()
             
             # Conectar alunos sem professor automaticamente
+            alunos_com_professor = DesignacaoAluno.objects.values_list('aluno_id', flat=True)
             alunos_sem_professor = User.objects.filter(
-                is_superuser=False,
-                professor_designado__isnull=True
-            )
+                is_superuser=False
+            ).exclude(id__in=alunos_com_professor)
             
             count_conectados = 0
             for aluno in alunos_sem_professor:

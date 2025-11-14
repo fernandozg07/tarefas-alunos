@@ -10,6 +10,8 @@ from .views_redacao import (lista_redacoes, criar_tema_redacao, gerar_tema_ia,
                            escrever_redacao, corrigir_redacao, ver_feedback_redacao, contar_palavras_ajax)
 from .views_redacao_extra import responder_comentario, detalhe_tema
 from .views_entregas import entregas_tema
+from .views_trocar_professor import trocar_professor, meus_alunos
+from .views_ajuda import ajuda
 
 # Define o namespace do app para uso em templates (ex: {% url 'tarefas:lista_tarefas' %})
 app_name = 'tarefas' 
@@ -54,4 +56,11 @@ urlpatterns = [
     path('redacoes/tema/<int:tema_id>/entregas/', entregas_tema, name='entregas_tema'),
     path('redacoes/comentario/<int:comentario_id>/responder/', responder_comentario, name='responder_comentario'),
     path('ajax/contar-palavras/', contar_palavras_ajax, name='contar_palavras_ajax'),
+    
+    # Gerenciamento de Professor-Aluno
+    path('trocar-professor/', trocar_professor, name='trocar_professor'),
+    path('meus-alunos/', meus_alunos, name='meus_alunos'),
+    
+    # Sistema de Ajuda
+    path('ajuda/', ajuda, name='ajuda'),
 ]
